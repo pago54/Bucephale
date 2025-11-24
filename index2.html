@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pronostics & Multi Quinté+</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:20px; }
+    h1 { color:#333; }
+    .card { background:#fff; padding:20px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+    .btn { padding:10px 15px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+    .btn:hover { background:#0056b3; }
+    input, select { padding:8px; margin-top:5px; width:100%; }
+    .notice { margin-top:10px; color:#555; white-space:pre-wrap; }
+    .slot { padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:5px; background:#fafafa; }
+  </style>
+</head>
+<body>
+  <h1>Pronostics & Résultats Quinté+</h1>
+
+  <!-- Pronostics -->
+  <div class="card">
+    <h2>Pronostics du jour</h2>
+    <button class="btn" id="btnFetchPronostics">Récupérer les pronostics</button>
+    <div id="pronostics" class="notice"></div>
+  </div>
+
+  <!-- Multi -->
+  <div class="card">
+    <h2>Ticket Multi</h2>
+    <label for="multiType">Choisir le type de Multi :</label>
+    <select id="multiType">
+      <option value="4">Multi en 4</option>
+      <option value="5">Multi en 5</option>
+      <option value="6" selected>Multi en 6</option>
+      <option value="7">Multi en 7</option>
+    </select>
+    <button class="btn" id="btnBuildMulti">Construire le ticket</button>
+    <div id="ticketView"></div>
+    <div id="ticketInfo" class="notice"></div>
+  </div>
+
+  <!-- Résultats -->
+  <div class="card">
+    <h2>Résultat officiel</h2>
+    <button class="btn" id="btnFetchResults">Récupérer l'arrivée et les rapports</button>
+    <div>
+      <label>Arrivée :</label>
+      <input id="arrivee" type="text" />
+    </div>
+    <div>
+      <label>Rapports Multi :</label>
+      <input id="rapport" type="text" />
+    </div>
+    <div id="results" class="notice"></div>
+    <button class="btn" id="btnCalcMulti">Calculer les gains Multi</button>
+    <div id="gainStatus" class="notice"></div>
+  </div>
+
+  <script>
+    // --- Pronostics ---
+    async function fetchPronostics() {
+      const res = await fetch("/api/copilot-pronostics?date=" + new Date().toISOString().slice(0,10));
+      const data = await res.json();
+      document.getElementById("pronostics").textContent = JSON.stringify(data, null, 2);
+
+      // Sauvegarde la sélection pour le Multi
+      window.currentSelection = (data.bases || []).concat(data.regulars || []).concat(data.outsiders || []);
+    }
+
+    // --- Multi ---
+    function renderMultiTicket(selection, type) {
+      const view = document.getElementById("ticketView");
+      const info = document.getElementById("ticketInfo");
+      view.innerHTML = '';
+
+      if (!selection || selection.length === 0) {
+        info.innerHTML = "⚠️ Aucune sélection disponible. Récupérez d'abord les pronostics.";
+        return;
+      }
+
+      const ticket = selection.slice(0, type);
+
+      const div = document.createElement('div');
+      div.className = 'slot';
+      div.innerHTML = `
+        <div class="muted">Ticket Multi en ${type}</div>
+        <div><strong>${ticket.join('-')}</strong></div>
+      `;
+      view.appendChild(div);
+
+      info.innerHTML = `
+        Type de pari : Multi en ${type}\n
+        Chevaux joués : ${ticket.join('-')}\n
+        Nombre total de chevaux sélectionnés : ${selection.length}
+      `;
+
+      window.currentMulti = { type, ticket };
+    }
+
+    // --- Résultats ---
+    async function fetchResults() {
+      const res = await fetch("/api/copilot-results?date=" + new Date().toISOString().slice(0,10));
+      const data = await res.json();
+      document.getElementById("arrivee").value = (data.arrivee || []).join("-");
+      document.getElementById("
