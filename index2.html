@@ -59,7 +59,7 @@
   <script>
     // --- Pronostics ---
     async function fetchPronostics() {
-      const res = await fetch("/api/copilot-pronostics?date=" + new Date().toISOString().slice(0,10));
+      const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-pronostics?date=" + new Date().toISOString().slice(0,10));
       const data = await res.json();
       document.getElementById("pronostics").textContent = JSON.stringify(data, null, 2);
 
@@ -99,7 +99,8 @@
 
     // --- Résultats ---
     async function fetchResults() {
-      const res = await fetch("/api/copilot-results?date=" + new Date().toISOString().slice(0,10));
+      const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-results?date=" + new Date().toISOString().slice(0,10));
       const data = await res.json();
       document.getElementById("arrivee").value = (data.arrivee || []).join("-");
+
       document.getElementById("
