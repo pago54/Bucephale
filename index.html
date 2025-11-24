@@ -186,7 +186,10 @@
       <!-- Résultats et gains -->
       <section class="card">
         <h2>Résultat officiel et gains</h2>
-        <div class="row-3">
+        <div class="actions">
+          <button class="btn" id="btnFetchResults">Récupérer l'arrivée et les rapports</button>
+        </div>
+        <div class="row-3" style="margin-top:12px">
           <div>
             <label for="arrivee">Arrivée Quinté (5 numéros dans l’ordre)</label>
             <input id="arrivee" type="text" placeholder="Ex: 5-2-14-10-9" />
@@ -267,7 +270,25 @@
       const data = await res.json();
      return data;
     }
-
+    
+    async function fetchResults() {
+      const date = $('date').value || new Date().toISOString().slice(0,10);
+    
+      try {
+        // Appel à ton backend Node.js/Flask qui interroge Gemini
+        const res = await fetch("/api/copilot-results?date=" + encodeURIComponent(date));
+        const data = await res.json();
+    
+        // Remplissage automatique des champs
+        $('arrivee').value = (data.arrivee || []).join("-");
+        $('rapport').value = `${data.ordre || 0} / ${data.desordre || 0} / ${data.bonus || 0}`;
+    
+        $('gainStatus').innerHTML = `Résultats récupérés pour ${date} – ${data.meeting || "Course"} (${data.heure || ""})`;
+    
+      } catch (err) {
+        $('gainStatus').innerHTML = `<span class="ko">Impossible de récupérer les résultats.</span>`;
+      }
+    }
     // --------- Rendu UI ---------
     function renderPronostics(data) {
       const list = $('listPronostics');
@@ -431,6 +452,8 @@
         }
       });
 
+      $('btnFetchResults').addEventListener('click', fetchResults);
+      
       $('btnReset').addEventListener('click', () => {
         $('meeting').value = '';
         $('heure').value = '';
@@ -530,3 +553,4 @@
   </script>
 </body>
 </html>
+
