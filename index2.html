@@ -2,30 +2,180 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Pronostics & Multi Quinté+</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pronostics Quinté+ du jour</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:20px; }
-    h1 { color:#333; }
-    .card { background:#fff; padding:20px; margin-bottom:20px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
-    .btn { padding:10px 15px; background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer; }
-    .btn:hover { background:#0056b3; }
-    input, select { padding:8px; margin-top:5px; width:100%; }
-    .notice { margin-top:10px; color:#555; white-space:pre-wrap; }
-    .slot { padding:10px; border:1px solid #ccc; border-radius:6px; margin-top:5px; background:#fafafa; }
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --accent: #22d3ee;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: linear-gradient(180deg, #0b1220, var(--bg));
+      color: var(--text);
+    }
+    header {
+      padding: 24px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(17,24,39,0.6);
+      backdrop-filter: blur(8px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 { margin: 0; font-size: 1.4rem }
+    .subtitle { color: var(--muted); margin-top: 6px; font-size: 0.95rem }
+    main { max-width: 1080px; margin: 24px auto; padding: 0 20px }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: 1.1fr 0.9fr }
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px }
+    label { font-size: 0.9rem; color: var(--muted) }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0b1220;
+      color: var(--text);
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+    }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px }
+    .btn {
+      width: auto; cursor: pointer; transition: transform 0.05s ease;
+      background: linear-gradient(180deg, #0ea5b6, #0891b2);
+      border: none; color: white; font-weight: 600;
+    }
+    .btn:hover { transform: translateY(-1px) }
+    .btn.secondary { background: #1f2937; color: var(--text) }
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    .list { display: grid; gap: 8px; margin-top: 8px }
+    .chip {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; border: 1px dashed var(--border); border-radius: 10px;
+      background: #0b1220;
+    }
+    .chip .left { display: flex; align-items: center; gap: 8px }
+    .chip .num {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: grid; place-items: center; font-weight: 700;
+      background: #0a0f1a; border: 1px solid var(--border);
+    }
+    .pill { padding: 3px 8px; border-radius: 999px; font-size: 0.78rem }
+    .pill.base { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.35) }
+    .pill.reg { background: rgba(234,179,8,0.15); color: var(--warning); border: 1px solid rgba(234,179,8,0.35) }
+    .pill.out { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.35) }
+    .ticket { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin-top: 10px }
+    .ticket .slot {
+      padding: 10px; border: 1px solid var(--border); border-radius: 10px; background: #0b1220; text-align: center;
+    }
+    .muted { color: var(--muted) }
+    .total { font-weight: 700 }
+    .notice { font-size: 0.9rem; color: var(--muted); margin-top: 8px }
+    footer { color: var(--muted); text-align: center; padding: 20px }
+    .divider { height: 1px; background: var(--border); margin: 12px 0 }
+    .ok { color: var(--success) }
+    .ko { color: var(--danger) }
   </style>
 </head>
 <body>
-  <h1>Pronostics & Résultats Quinté+</h1>
+  <header>
+    <h1>Pronostics Quinté+ du jour</h1>
+    <div class="subtitle">Récupération à la demande, ticket en champ réduit, et calcul des gains après l’arrivée</div>
+  </header>
 
-  <!-- Pronostics -->
-  <div class="card">
-    <h2>Pronostics du jour</h2>
-    <button class="btn" id="btnFetchPronostics">Récupérer les pronostics</button>
-    <div id="pronostics" class="notice"></div>
-  </div>
+  <main>
+    <div class="grid">
+      <!-- Paramètres et récupération des pronostics -->
+      <section class="card">
+        <h2>Paramètres de la course</h2>
+        <div class="row">
+          <div>
+            <label for="date">Date</label>
+            <input id="date" type="date" />
+          </div>
+          <div>
+            <label for="meeting">Hippodrome / épreuve</label>
+            <input id="meeting" type="text" placeholder="Ex: Auteuil - Prix Marc Antony" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="heure">Heure</label>
+            <input id="heure" type="time" />
+          </div>
+          <div>
+            <label for="distance">Distance (optionnel)</label>
+            <input id="distance" type="text" placeholder="Ex: 3600 m" />
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnFetch">Récupérer les pronostics</button>
+          <button class="btn secondary" id="btnReset">Réinitialiser</button>
+        </div>
+        <div class="notice">La récupération se fait à la demande. Branchez votre propre API ou collez des données manuelles.</div>
+        <div id="fetchStatus" class="notice"></div>
+      </section>
 
-  <!-- Multi -->
-  <div class="card">
+      <!-- Pronostics et ticket -->
+      <section class="card">
+        <h2>Pronostics du jour</h2>
+        <div class="tag">Synthèse presse & experts</div>
+        <div id="listPronostics" class="list" style="margin-top:8px"></div>
+        <div class="divider"></div>
+        <h2>Ticket Quinté+ en champ réduit</h2>
+        <div class="notice">Bases: vos chevaux de confiance. Chances régulières: appuis. Outsiders: compléments.</div>
+        <div class="row-3">
+          <div>
+            <label for="bases">Bases (2–3 numéros, séparés par des virgules)</label>
+            <input id="bases" type="text" placeholder="Ex: 5,2" />
+          </div>
+          <div>
+            <label for="regulars">Chances régulières (2–3)</label>
+            <input id="regulars" type="text" placeholder="Ex: 14,10" />
+          </div>
+          <div>
+            <label for="outsiders">Outsiders (2–4)</label>
+            <input id="outsiders" type="text" placeholder="Ex: 9,15,13,3" />
+          </div>
+        </div>
     <h2>Ticket Multi</h2>
     <label for="multiType">Choisir le type de Multi :</label>
     <select id="multiType">
@@ -35,36 +185,163 @@
       <option value="7">Multi en 7</option>
     </select>
     <button class="btn" id="btnBuildMulti">Construire le ticket</button>
-    <div id="ticketView"></div>
-    <div id="ticketInfo" class="notice"></div>
-  </div>
+       <div id="ticketView" class="ticket"></div>
+        <div id="ticketInfo" class="notice"></div>
+      </section>
 
-  <!-- Résultats -->
-  <div class="card">
-    <h2>Résultat officiel</h2>
-    <button class="btn" id="btnFetchResults">Récupérer l'arrivée et les rapports</button>
-    <div>
-      <label>Arrivée :</label>
-      <input id="arrivee" type="text" />
+      <!-- Résultats et gains -->
+      <section class="card">
+        <h2>Résultat officiel et gains</h2>
+        <div class="actions">
+          <button class="btn" id="btnFetchResults">Récupérer l'arrivée et les rapports</button>
+        </div>
+        <div class="row-3" style="margin-top:12px">
+          <div>
+            <label for="arrivee">Arrivée Quinté (5 numéros dans l’ordre)</label>
+            <input id="arrivee" type="text" placeholder="Ex: 5-2-14-10-9" />
+          </div>
+          <div>
+            <label for="rapport">Rapports (Ordre / Désordre / Bonus)</label>
+            <input id="rapport" type="text" placeholder="Ex: 35000 / 650 / 50" />
+          </div>
+          <div>
+            <label for="mise">Mise par combinaison (€)</label>
+            <input id="mise" type="number" placeholder="Ex: 0.5" step="0.5" />
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="btnCalc">Calculer les gains</button>
+        </div>
+        <div id="gainStatus" class="notice"></div>
+        <div id="gainBreakdown" class="list"></div>
+      </section>
+
+      <!-- Historique du jour -->
+      <section class="card">
+        <h2>Historique du jour</h2>
+        <div id="history" class="list"></div>
+      </section>
     </div>
-    <div>
-      <label>Rapports Multi :</label>
-      <input id="rapport" type="text" />
-    </div>
-    <div id="results" class="notice"></div>
-    <button class="btn" id="btnCalcMulti">Calculer les gains Multi</button>
-    <div id="gainStatus" class="notice"></div>
-  </div>
+  </main>
+
+  <footer>
+    Conçu pour un usage personnel. Les rapports et règles de gains peuvent varier selon l’organisateur.
+  </footer>
 
   <script>
-    // --- Pronostics ---
-    async function fetchPronostics() {
-      const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-pronostics?date=" + new Date().toISOString().slice(0,10));
-      const data = await res.json();
-      document.getElementById("pronostics").textContent = JSON.stringify(data, null, 2);
+    // --------- Utilitaires ---------
+    const $ = (id) => document.getElementById(id);
+    const parseNums = (str) => (str || "")
+      .split(/[, \-;]+/)
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(n => parseInt(n, 10))
+      .filter(n => Number.isFinite(n));
 
-      // Sauvegarde la sélection pour le Multi
-      window.currentSelection = (data.bases || []).concat(data.regulars || []).concat(data.outsiders || []);
+    const unique = (arr) => [...new Set(arr)];
+    const todayISO = () => new Date().toISOString().slice(0,10);
+
+    const store = {
+      get(key, def=null) {
+        try { return JSON.parse(localStorage.getItem(key)) ?? def; }
+        catch(e) { return def; }
+      },
+      set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+    };
+
+    // --------- Données mock de pronostics (remplacez par votre API) ---------
+    // Vous pouvez remplacer fetchPronostics() par un appel à votre endpoint.
+    const MOCK_PRONO = {
+      // Exemple de jeu du jour (à adapter dynamiquement côté serveur)
+      date: todayISO(),
+      meeting: "Auteuil - Prix Marc Antony",
+      heure: "15:15",
+      selection: [
+        { num: 5, nom: "Vol d’Argent", tag: "Base" },
+        { num: 2, nom: "Legend du Lemo", tag: "Base" },
+        { num: 14, nom: "Lilette", tag: "Régulière" },
+        { num: 10, nom: "Mon Petit Prince", tag: "Régulière" },
+        { num: 9, nom: "Parisienne Bleue", tag: "Outsider" },
+        { num: 15, nom: "Some of Them", tag: "Outsider" },
+        { num: 13, nom: "Ludmiko", tag: "Outsider" },
+        { num: 3, nom: "Family Speed", tag: "Outsider" }
+      ],
+      bases: [5, 2],
+      regulars: [14, 10],
+      outsiders: [9, 15, 13, 3]
+    };
+
+    async function fetchPronostics() {
+      const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-pronostics?date=" + encodeURIComponent($('date').value));
+      const data = await res.json();
+     return data;
+    }
+    
+    async function fetchResults() {
+      const date = $('date').value || new Date().toISOString().slice(0,10);
+    
+      try {
+        // Appel à ton backend Node.js/Flask qui interroge Gemini
+        const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-results?date=" + encodeURIComponent(date));
+        const data = await res.json();
+    
+        // Remplissage automatique des champs
+        $('arrivee').value = (data.arrivee || []).join("-");
+        $('rapport').value = `${data.ordre || 0} / ${data.desordre || 0} / ${data.bonus || 0}`;
+    
+        $('gainStatus').innerHTML = `Résultats récupérés pour ${date} – ${data.meeting || "Course"} (${data.heure || ""})`;
+    
+      } catch (err) {
+        $('gainStatus').innerHTML = `<span class="ko">Impossible de récupérer les résultats.</span>`;
+      }
+    }
+    // --------- Rendu UI ---------
+    function renderPronostics(data) {
+      const list = $('listPronostics');
+      list.innerHTML = '';
+      data.selection.forEach(item => {
+        const pillClass = item.tag === 'Base' ? 'base' : item.tag === 'Régulière' ? 'reg' : 'out';
+        const el = document.createElement('div');
+        el.className = 'chip';
+        el.innerHTML = `
+          <div class="left">
+            <div class="num">${item.num}</div>
+            <div>
+              <div><strong>${item.nom}</strong></div>
+              <div class="muted">${item.tag}</div>
+            </div>
+          </div>
+          <div><span class="pill ${pillClass}">${item.tag}</span></div>
+        `;
+        list.appendChild(el);
+      });
+
+      // Pré-remplir les champs du ticket
+      $('bases').value = data.bases.join(', ');
+      $('regulars').value = data.regulars.join(', ');
+      $('outsiders').value = data.outsiders.join(', ');
+
+      $('fetchStatus').innerHTML = `Pronostics chargés pour <span class="ok">${data.date}</span> – ${data.meeting} (${data.heure})`;
+      // Historique
+      const dayKey = `history:${data.date}`;
+      const day = store.get(dayKey, []);
+      day.push({ ts: Date.now(), type: 'pronostics', data });
+      store.set(dayKey, day);
+      renderHistory(data.date);
+    }
+
+    function renderTicket(combos, meta) {
+      const view = $('ticketView');
+      const info = $('ticketInfo');
+      view.innerHTML = '';
+      const slots = combos.slice(0,8); // affichage compact
+      slots.forEach((c, i) => {
+        const div = document.createElement('div');
+        div.className = 'slot';
+        div.innerHTML = `<div class="muted">Combinaison ${i+1}</div><div><strong>${c.join('-')}</strong></div>`;
+        view.appendChild(div);
+      });
+      info.innerHTML = `Nombre de combinaisons: <span class="total">${combos.length}</span> • Méthode: champ réduit (bases ${meta.bases.join('-')})`;
     }
 
     // --- Multi ---
@@ -95,12 +372,220 @@
       `;
 
       window.currentMulti = { type, ticket };
+    }	
+
+    function renderHistory(date) {
+      const wrap = $('history');
+      const entries = store.get(`history:${date}`, []);
+      wrap.innerHTML = '';
+      entries.slice().reverse().forEach(e => {
+        const div = document.createElement('div');
+        div.className = 'chip';
+        const time = new Date(e.ts).toLocaleTimeString();
+        let desc = '';
+        if (e.type === 'pronostics') {
+          desc = `Pronostics récupérés (${e.data.meeting})`;
+        } else if (e.type === 'gains') {
+          desc = `Gains calculés: ${e.data.totalGain.toFixed(2)} €`;
+        }
+        div.innerHTML = `<div class="left"><div class="num">⏱️</div><div><div>${time}</div><div class="muted">${desc}</div></div></div>`;
+        wrap.appendChild(div);
+      });
     }
 
-    // --- Résultats ---
-    async function fetchResults() {
-      const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-results?date=" + new Date().toISOString().slice(0,10));
-      const data = await res.json();
-      document.getElementById("arrivee").value = (data.arrivee || []).join("-");
+    // --------- Logique ticket champ réduit ---------
+    // Génère des combinaisons Quinté+ en partant de 2 bases, 2–3 réguliers, et compléments outsiders.
+    function buildReducedField(bases, regulars, outsiders) {
+      // Règles simples:
+      // - Les 2 bases doivent figurer dans les 5
+      // - Compléter avec 3 parmi regulars+outsiders
+      // - Générer toutes les permutations d’ordre pour évaluer l’Ordre
+      const pool = unique([...regulars, ...outsiders]).filter(n => !bases.includes(n));
+      const choose3 = combinations(pool, 3);
+      const quintes = [];
+      choose3.forEach(trio => {
+        const set5 = [...bases, ...trio];
+        permutations(set5).forEach(p => quintes.push(p));
+      });
+      // Deduplicate arrays of numbers by string key
+      const uniq = unique(quintes.map(q => q.join('-'))).map(s => s.split('-').map(n => parseInt(n,10)));
+      return uniq;
+    }
 
-      document.getElementById("
+    // Helpers combinaisons / permutations
+    function combinations(arr, k) {
+      const res = [];
+      function bt(start, path) {
+        if (path.length === k) { res.push([...path]); return; }
+        for (let i = start; i < arr.length; i++) {
+          path.push(arr[i]);
+          bt(i+1, path);
+          path.pop();
+        }
+      }
+      bt(0, []);
+      return res;
+    }
+    function permutations(arr) {
+      const res = [];
+      function bt(path, used) {
+        if (path.length === arr.length) { res.push([...path]); return; }
+        for (let i = 0; i < arr.length; i++) {
+          if (used[i]) continue;
+          used[i] = true; path.push(arr[i]);
+          bt(path, used);
+          path.pop(); used[i] = false;
+        }
+      }
+      bt([], Array(arr.length).fill(false));
+      return res;
+    }
+
+    // --------- Calcul des gains ---------
+    // Simplification pédagogique:
+    // - Si une combinaison == arrivée exacte: rapport Ordre
+    // - Si une combinaison contient les 5 numéros (quel que soit l'ordre): rapport Désordre
+    // - Bonus si au moins 4 numéros parmi 5
+    function calcGains(combos, arrivee, rapports, mise) {
+      const [ordreR, desordreR, bonusR] = rapports;
+      let ordreHits = 0, desordreHits = 0, bonusHits = 0;
+      const arrSet = new Set(arrivee);
+      const arrKey = arrivee.join('-');
+
+      combos.forEach(c => {
+        const key = c.join('-');
+        if (key === arrKey) {
+          ordreHits++;
+        } else {
+          const matchCount = c.filter(n => arrSet.has(n)).length;
+          if (matchCount === 5) desordreHits++;
+          else if (matchCount >= 4) bonusHits++;
+        }
+      });
+
+      const gainOrdre = ordreHits * ordreR * mise;
+      const gainDesordre = desordreHits * desordreR * mise;
+      const gainBonus = bonusHits * bonusR * mise;
+      const totalGain = gainOrdre + gainDesordre + gainBonus;
+      return {
+        ordreHits, desordreHits, bonusHits,
+        gainOrdre, gainDesordre, gainBonus, totalGain
+      };
+    }
+
+    // --------- Événements ---------
+    window.addEventListener('DOMContentLoaded', () => {
+      // Préremplir la date du jour
+      $('date').value = todayISO();
+
+      $('btnFetch').addEventListener('click', async () => {
+        $('fetchStatus').textContent = 'Chargement des pronostics...';
+        try {
+          const data = await fetchPronostics();
+          renderPronostics(data);
+        } catch (e) {
+          $('fetchStatus').innerHTML = `<span class="ko">Échec de la récupération. Vérifiez votre connexion/API.</span>`;
+        }
+      });
+
+      $('btnFetchResults').addEventListener('click', fetchResults);
+      
+      $('btnReset').addEventListener('click', () => {
+        $('meeting').value = '';
+        $('heure').value = '';
+        $('distance').value = '';
+        $('listPronostics').innerHTML = '';
+        $('fetchStatus').textContent = '';
+        $('bases').value = '';
+        $('regulars').value = '';
+        $('outsiders').value = '';
+        $('ticketView').innerHTML = '';
+        $('ticketInfo').textContent = '';
+        $('arrivee').value = '';
+        $('rapport').value = '';
+        $('mise').value = '';
+        $('gainStatus').textContent = '';
+        $('gainBreakdown').innerHTML = '';
+      });
+
+      $('btnBuildTicket').addEventListener('click', () => {
+        const bases = unique(parseNums($('bases').value));
+        const regs = unique(parseNums($('regulars').value));
+        const outs = unique(parseNums($('outsiders').value));
+
+        if (bases.length < 2) {
+          $('ticketInfo').innerHTML = `<span class="ko">Indiquez au moins 2 bases.</span>`;
+          return;
+        }
+        const combos = buildReducedField(bases, regs, outs);
+        renderTicket(combos, { bases, regs, outs });
+
+        // Sauvegarde historique
+        const date = $('date').value || todayISO();
+        const dayKey = `history:${date}`;
+        const day = store.get(dayKey, []);
+        day.push({ ts: Date.now(), type: 'ticket', data: { bases, regs, outs, combos: combos.length }});
+        store.set(dayKey, day);
+        renderHistory(date);
+      });
+
+      $('btnCalc').addEventListener('click', () => {
+        const arrivee = parseNums($('arrivee').value);
+        const rapports = parseNums($('rapport').value);
+        const mise = parseFloat($('mise').value || '0');
+
+        if (arrivee.length !== 5) {
+          $('gainStatus').innerHTML = `<span class="ko">L'arrivée doit comporter 5 numéros.</span>`;
+          return;
+        }
+        if (rapports.length < 3) {
+          $('gainStatus').innerHTML = `<span class="ko">Renseignez Ordre / Désordre / Bonus.</span>`;
+          return;
+        }
+        if (!(mise > 0)) {
+          $('gainStatus').innerHTML = `<span class="ko">La mise doit être supérieure à 0.</span>`;
+          return;
+        }
+
+        // Reconstituer les combinaisons du ticket actuel
+        const bases = unique(parseNums($('bases').value));
+        const regs = unique(parseNums($('regulars').value));
+        const outs = unique(parseNums($('outsiders').value));
+        const combos = buildReducedField(bases, regs, outs);
+
+        const result = calcGains(combos, arrivee, rapports, mise);
+
+        $('gainStatus').innerHTML = `Combinaisons évaluées: <span class="total">${combos.length}</span> • Arrivée: ${arrivee.join('-')}`;
+        const breakdown = $('gainBreakdown');
+        breakdown.innerHTML = '';
+        const rows = [
+          { label: 'Ordre', hits: result.ordreHits, gain: result.gainOrdre },
+          { label: 'Désordre', hits: result.desordreHits, gain: result.gainDesordre },
+          { label: 'Bonus', hits: result.bonusHits, gain: result.gainBonus },
+          { label: 'Total', hits: '', gain: result.totalGain }
+        ];
+        rows.forEach(r => {
+          const div = document.createElement('div');
+          div.className = 'chip';
+          div.innerHTML = `
+            <div class="left">
+              <div class="num">€</div>
+              <div><div><strong>${r.label}</strong></div><div class="muted">${r.hits !== '' ? r.hits + ' occurrence(s)' : '—'}</div></div>
+            </div>
+            <div><strong>${r.gain.toFixed(2)} €</strong></div>
+          `;
+          breakdown.appendChild(div);
+        });
+
+        // Historique
+        const date = $('date').value || todayISO();
+        const dayKey = `history:${date}`;
+        const day = store.get(dayKey, []);
+        day.push({ ts: Date.now(), type: 'gains', data: { arrivee, rapports, mise, totalGain: result.totalGain }});
+        store.set(dayKey, day);
+        renderHistory(date);
+      });
+    });
+  </script>
+</body>
+</html>
