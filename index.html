@@ -276,7 +276,7 @@
     
       try {
         // Appel à ton backend Node.js/Flask qui interroge Gemini
-        const res = await fetch("/api/copilot-results?date=" + encodeURIComponent(date));
+        const res = await fetch("https://myproject-ncnr.onrender.com/api/copilot-results?date=" + encodeURIComponent(date));
         const data = await res.json();
     
         // Remplissage automatique des champs
@@ -553,4 +553,5 @@
   </script>
 </body>
 </html>
+
 
