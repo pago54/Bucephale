@@ -136,7 +136,8 @@ async function fetchPronostics() {
         resultsDiv.innerHTML = `<p style="color:red;">Erreur : ${error.message}</p>`;
     }
 }
-
+    
+function displayResults(data) {
     const resultsDiv = document.getElementById("results");
 
     // Construction dynamique des sections Multi
@@ -247,4 +248,5 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
