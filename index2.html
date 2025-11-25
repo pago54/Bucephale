@@ -165,8 +165,7 @@ function displayResults(data) {
         <p><strong>Bases :</strong> ${data.bases.join(", ")}</p>
         <p><strong>Réguliers :</strong> ${data.regulars.join(", ")}</p>
         <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>
-
-		// ✅ Construction dynamique des Multi
+		<p></p>
 		<h3>Paris Multi</h3>
 		<table>
 			<tr>
@@ -175,9 +174,11 @@ function displayResults(data) {
 			</tr>
 			<tr>
 				<td>Multi 4</td>
-				${data.selection.map(item => `
-						<td>${item.num}, </td>
-				`).join("")}
+				<td>
+				${data.selection.slice(0, 4).map(item => `
+						${item.num}
+				`).join(",")}
+				</td>
              </tr>
         </table>
     `;
@@ -234,6 +235,7 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
 
