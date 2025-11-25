@@ -149,8 +149,6 @@ function displayResults(data) {
                 <tr>
                     <th>Type</th>
                     <th>Combinaison</th>
-                    <th>Rapport 3€</th>
-                    <th>Rapport 1.50€</th>
                 </tr>
                 ${["4", "5", "6", "7"].map(type => {
                     const m = data.multi[type];
@@ -159,9 +157,7 @@ function displayResults(data) {
                         <tr>
                             <td>Multi ${type}</td>
                             <td>${m.combinaison.join(" - ")}</td>
-                            <td>${m["rapport3€"]} €</td>
-                            <td>${m["rapport1.50€"]} €</td>
-                        </tr>
+                         </tr>
                     `;
                 }).join("")}
             </table>
@@ -197,6 +193,7 @@ function displayResults(data) {
         ${multiHtml}
     `;
 }
+
 
 // ✅ Appel backend pour l’arrivée
 async function fetchArrivee() {
@@ -248,5 +245,6 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
