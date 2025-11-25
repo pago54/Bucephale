@@ -140,6 +140,30 @@ async function fetchPronostics() {
 function displayResults(data) {
     const resultsDiv = document.getElementById("results");
 
+    // Construction dynamique des sections Multi
+    let multiHtml = "";
+    if (data.multi) {
+        multiHtml = `
+            <h3>Paris Multi</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Combinaison</th>
+                </tr>
+                ${["4", "5", "6", "7"].map(type => {
+                    const m = data.multi[type];
+                    if (!m) return "";
+                    return `
+                        <tr>
+                            <td>Multi ${type}</td>
+                            <td>${m.combinaison.join(" - ")}</td>
+                         </tr>
+                    `;
+                }).join("")}
+            </table>
+        `;
+    }
+
     resultsDiv.innerHTML = `
         <h2>${data.meeting}</h2>
         <p><strong>Date :</strong> ${data.date}</p>
@@ -164,32 +188,7 @@ function displayResults(data) {
         <h3>Groupes</h3>
         <p><strong>Bases :</strong> ${data.bases.join(", ")}</p>
         <p><strong>Réguliers :</strong> ${data.regulars.join(", ")}</p>
-        <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>
-    
-        // Construction dynamique des sections Multi
-        let multiHtml = "";
-        if (data.multi) {
-            multiHtml = `
-                <h3>Paris Multi</h3>
-                <table>
-                    <tr>
-                        <th>Type</th>
-                        <th>Combinaison</th>
-                    </tr>
-                    ${["4", "5", "6", "7"].map(type => {
-                        const m = data.multi[type];
-                        if (!m) return "";
-                        return `
-                            <tr>
-                                <td>Multi ${type}</td>
-                                <td>${m.combinaison.join(" - ")}</td>
-                             </tr>
-                        `;
-                    }).join("")}
-                </table>
-            `;
-        }
-    
+        <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>   
 
         ${multiHtml}
     `;
@@ -246,6 +245,7 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
 
