@@ -137,8 +137,35 @@ async function fetchPronostics() {
     }
 }
 
-function displayResults(data) {
     const resultsDiv = document.getElementById("results");
+
+    // Construction dynamique des sections Multi
+    let multiHtml = "";
+    if (data.multi) {
+        multiHtml = `
+            <h3>Paris Multi</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Combinaison</th>
+                    <th>Rapport 3€</th>
+                    <th>Rapport 1.50€</th>
+                </tr>
+                ${["4", "5", "6", "7"].map(type => {
+                    const m = data.multi[type];
+                    if (!m) return "";
+                    return `
+                        <tr>
+                            <td>Multi ${type}</td>
+                            <td>${m.combinaison.join(" - ")}</td>
+                            <td>${m["rapport3€"]} €</td>
+                            <td>${m["rapport1.50€"]} €</td>
+                        </tr>
+                    `;
+                }).join("")}
+            </table>
+        `;
+    }
 
     resultsDiv.innerHTML = `
         <h2>${data.meeting}</h2>
@@ -165,6 +192,8 @@ function displayResults(data) {
         <p><strong>Bases :</strong> ${data.bases.join(", ")}</p>
         <p><strong>Réguliers :</strong> ${data.regulars.join(", ")}</p>
         <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>
+
+        ${multiHtml}
     `;
 }
 
@@ -218,3 +247,4 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
