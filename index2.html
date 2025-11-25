@@ -140,30 +140,6 @@ async function fetchPronostics() {
 function displayResults(data) {
     const resultsDiv = document.getElementById("results");
 
-    // ✅ Construction dynamique des Multi
-    let multiHtml = "";
-    if (data.multi) {
-        multiHtml = `
-            <h3>Paris Multi</h3>
-            <table>
-                <tr>
-                    <th>Type</th>
-                    <th>Combinaison</th>
-                </tr>
-                ${["4", "5", "6", "7"].map(type => {
-                    const m = data.multi[type];
-                    if (!m) return "";
-                    return `
-                        <tr>
-                            <td>Multi ${type}</td>
-                            <td>${m.combinaison.join(" - ")}</td>
-                        </tr>
-                    `;
-                }).join("")}
-            </table>
-        `;
-    }
-
     resultsDiv.innerHTML = `
         <h2>${data.meeting}</h2>
         <p><strong>Date :</strong> ${data.date}</p>
@@ -190,7 +166,20 @@ function displayResults(data) {
         <p><strong>Réguliers :</strong> ${data.regulars.join(", ")}</p>
         <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>
 
-        ${multiHtml}
+		// ✅ Construction dynamique des Multi
+		<h3>Paris Multi</h3>
+		<table>
+			<tr>
+				<th>Type</th>
+				<th>Combinaison</th>
+			</tr>
+			<tr>
+				<td>Multi 4</td>
+				${data.selection.map(item => `
+						<td>${item.num}, </td>
+				`).join("")}
+             </tr>
+        </table>
     `;
 }
 
@@ -245,6 +234,7 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
 
