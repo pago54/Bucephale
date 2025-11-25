@@ -244,16 +244,16 @@ function displayArrivee(data) {
         </div>
 
         <h3>Rapports Quinté+</h3>
-        <p><strong>Ordre :</strong> ${data.rapports.quinte.ordre} €</p>
-        <p><strong>Désordre :</strong> ${data.rapports.quinte.desordre} €</p>
-        <p><strong>Bonus :</strong> ${data.rapports.quinte.bonus4} €</p>
-        <p><strong>Bonus :</strong> ${data.rapports.quinte.bonus3} €</p>
+        <p><strong>Ordre :</strong> ${data.rapports.quinte.ordre.toFixed(2)} €</p>
+        <p><strong>Désordre :</strong> ${data.rapports.quinte.desordre.toFixed(2)} €</p>
+        <p><strong>Bonus :</strong> ${data.rapports.quinte.bonus4.toFixed(2)} €</p>
+        <p><strong>Bonus :</strong> ${data.rapports.quinte.bonus3.toFixed(2)} €</p>
 
         <h3>Rapports Multi</h3>
-        <p><strong>Multi 4</strong> ${data.multi_gagnants.multi4.combinaison.join(" - ")} ${data.multi_gagnants.multi4.rapport} €</p>
-        <p><strong>Multi 5</strong> ${data.multi_gagnants.multi5.combinaison.join(" - ")} ${data.multi_gagnants.multi5.rapport} €</p>
-        <p><strong>Multi 6</strong> ${data.multi_gagnants.multi6.combinaison.join(" - ")} ${data.multi_gagnants.multi6.rapport} €</p>
-        <p><strong>Multi 7</strong> ${data.multi_gagnants.multi7.combinaison.join(" - ")} ${data.multi_gagnants.multi7.rapport} €</p>
+        <p><strong>Multi 4</strong> ${data.multi_gagnants.multi4.combinaisons.join(" - ")} ${data.multi_gagnants.multi4.rapport.toFixed(2)} €</p>
+        <p><strong>Multi 5</strong> ${data.multi_gagnants.multi5.combinaisons.join(" - ")} ${data.multi_gagnants.multi5.rapport.toFixed(2)} €</p>
+        <p><strong>Multi 6</strong> ${data.multi_gagnants.multi6.combinaisons.join(" - ")} ${data.multi_gagnants.multi6.rapport.toFixed(2)} €</p>
+        <p><strong>Multi 7</strong> ${data.multi_gagnants.multi7.combinaisons.join(" - ")} ${data.multi_gagnants.multi7.rapport.toFixed(2)} €</p>
 
 
     `;
@@ -262,6 +262,7 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
 
