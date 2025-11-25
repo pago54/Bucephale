@@ -140,7 +140,7 @@ async function fetchPronostics() {
 function displayResults(data) {
     const resultsDiv = document.getElementById("results");
 
-    // Construction dynamique des sections Multi
+    // ✅ Construction dynamique des Multi
     let multiHtml = "";
     if (data.multi) {
         multiHtml = `
@@ -157,7 +157,7 @@ function displayResults(data) {
                         <tr>
                             <td>Multi ${type}</td>
                             <td>${m.combinaison.join(" - ")}</td>
-                         </tr>
+                        </tr>
                     `;
                 }).join("")}
             </table>
@@ -188,7 +188,7 @@ function displayResults(data) {
         <h3>Groupes</h3>
         <p><strong>Bases :</strong> ${data.bases.join(", ")}</p>
         <p><strong>Réguliers :</strong> ${data.regulars.join(", ")}</p>
-        <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>   
+        <p><strong>Outsiders :</strong> ${data.outsiders.join(", ")}</p>
 
         ${multiHtml}
     `;
@@ -245,6 +245,7 @@ function displayArrivee(data) {
 
 </body>
 </html>
+
 
 
 
